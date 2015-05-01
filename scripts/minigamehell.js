@@ -81,7 +81,7 @@ module.exports = function(robot) {
 
 
   robot.hear(
-    /구구단시작/i,
+    /구구단시/i,
       function(res)
       {
         if(robot.brain[""+res.envelope.user.id] == null) 
@@ -113,14 +113,14 @@ module.exports = function(robot) {
         {
           robot.brain[""+res.envelope.user.id].money += 100;
           if(robot.brain[""+res.envelope.user.id] != null){
-            res.send(robot.brain[""+res.envelope.user.id].name+" 정답"); 
+            res.send(res.envelope.user.name+" 정답"); 
           }
         }
         else
         {
           robot.brain[""+res.envelope.user.id].money -= 50 ;
           if(robot.brain[""+res.envelope.user.id] != null){
-            res.send(robot.brain[""+res.envelope.user.id].name+" 오답");
+            res.send(res.envelope.user.name+" 오답");
           }
         }
         robot.brain["gugu"].problem = 0
