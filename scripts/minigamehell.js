@@ -12,8 +12,11 @@ function imbue(someString, level) {
 
 module.exports = function(robot) {
   var stringTable = {};
+  stringTable.stringEventScreen01 = {};
   stringTable.stringEventScreen01["_3"] = "This is a string for above 3 level";
   stringTable.stringEventScreen01["_7"] = "This is a string for above 7 level";
+
+  stringTable.stringEventScreen02 = {};
   stringTable.stringEventScreen02["_2"] = "Hello?";
   //above 3 strings are examples
 
