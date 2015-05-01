@@ -5,7 +5,7 @@ var stateMafia = false;
 var stateHardCore = false;
 var stateReadyProcess = false;
 
-var Players = array();
+var Players = array({});
 
 var stringTable = {};
 
@@ -63,7 +63,7 @@ function violationPenalty(user) {
 }
 
 function terminateMafia() {
-  
+
 }
 
 module.exports = function(robot) {
