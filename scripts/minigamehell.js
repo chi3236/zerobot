@@ -53,7 +53,7 @@ function mafiaRegister(res) {
 
 function isRegisteringDuplicated(res) {
   for (var each in Players) {
-    if (each.id == res.envelope.user.id) return true;
+    if (Players[each].id == res.envelope.user.id) return true;
   }
   return false;
 }
