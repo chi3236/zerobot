@@ -1,6 +1,45 @@
 // Description:
 //   ZeroBot Introduce.
 //
+var stateMafia = false;
+var stateHardCore = false;
+var stateReadyProcess = false;
+
+var Players = [];
+
+var stringTable = {};
+
+stringTable.notRegisteredAccountError = {};
+stringTable.notRegisteredAccountError["_0"] = "당신은 가입하지 않았습니다. 가입하려면 [회원가입]를 입력하십시오.";
+
+stringTable.stringMafiaAlreadyPlaying = {};
+stringTable.stringMafiaAlreadyPlaying["_0"] = "ㅡㅡ 기다려라 겜 아직 안끝났다...";
+stringTable.stringMafiaAlreadyPlaying["_4"] = "게임이 이미 진행중입니다. 진행중이 게임이 종료될 때까지 기다려 주세요.";
+
+stringTable.stringMafiaRegistrationDuplicatedAttempt = {};
+stringTable.stringMafiaRegistrationDuplicatedAttempt["_0"] = "아 좀 닥쳐라 ㅡㅡ";
+stringTable.stringMafiaRegistrationDuplicatedAttempt["_4"] = "중복된 요청입니다.";
+
+stringTable.stringMafiaPlayerRegistration = {};
+stringTable.stringMafiaPlayerRegistration["_0"] = "니가 뭔데 마피아를 시작하냐? 누가 [게임준비 마피아]를 입력하겠어?";
+stringTable.stringMafiaPlayerRegistration["_4"] = "마피아 게임을 준비합니다. 게임에 참여할 분들은 [게임준비 마피아]를 입력해 주세요.";
+
+stringTable.stringMafiaPlayerRegistrationHardcore = {};
+stringTable.stringMafiaPlayerRegistrationHardcore["_0"] = "ㅁ친 이샛기가 하드코어를 한답니다 ㅋㅋㅋㅋㅋㅋㅋ";
+stringTable.stringMafiaPlayerRegistrationHardcore["_4"] = "마피아 게임(하드코어 모드)을 준비합니다. 게임에 참여할 분들은 [게임준비 마피아]를 입력해 주세요.";
+
+stringTable.stringMafiaPlayerJoin = {};
+stringTable.stringMafiaPlayerJoin["_0"] = "가 마피아에 참여한다.";
+stringTable.stringMafiaPlayerJoin["_4"] = "님께서 마피아 게임에 참여하셨습니다.";
+
+stringTable.stringMafiaUnauthorizedStartRequest = {};
+stringTable.stringMafiaUnauthorizedStartRequest["_0"] = "하찮은 불가촉천민따위가 어딜 들이대??";
+stringTable.stringMafiaUnauthorizedStartRequest["_4"] = "게임에 참여하지 않는 사용자는 게임을 시작할 수 없습니다.";
+
+
+stringTable.generalGameStartIntroduction = "지금부터 마피아 게임이 시작됩니다!!!!";
+
+
 function imbue(someString, level) {
   while (level>=0) {
     if (someString["_"+level] != null)
@@ -8,17 +47,42 @@ function imbue(someString, level) {
 
     level--;
   }
+  return "UNDEFINED";
+}
+
+function mafiaPush(res) {
+  Players.push(res.envelope.user);
+}
+
+function mafiaRegister(res) {
+  mafiaPush(res);
+  res.send(res.envelope.user.name+imbue(stringTable.stringMafiaPlayerJoin, level));
+}
+
+function isRegisteringDuplicated(res) {
+  for (var each in Players) {
+    if (Players[each].id == res.envelope.user.id) return true;
+  }
+  return false;
+}
+
+function violationPenalty(user) {
+
+}
+
+function terminateMafia() {
+  stateMafia = false;
+  stateHardCore = false;
+  stateReadyProcess = false;
+
+  Players = [];
+}
+
+function mafiaInitializeGame(res) {
+  res.send(stringTable.generalGameStartIntroduction);
 }
 
 module.exports = function(robot) {
-  var stringTable = {};
-  stringTable.stringEventScreen01 = {};
-  stringTable.stringEventScreen01["_3"] = "This is a string for above 3 level";
-  stringTable.stringEventScreen01["_7"] = "This is a string for above 7 level";
-
-  stringTable.stringEventScreen02 = {};
-  stringTable.stringEventScreen02["_2"] = "Hello?";
-  //above 3 strings are examples
   robot.brain["gugu"] = {problem:0, answer:0};
 
   robot.respond(
@@ -83,10 +147,119 @@ module.exports = function(robot) {
     }
   );
 
+<<<<<<< HEAD
   robot.respond(
     /게임준비( 마피아)?/i,
+=======
+  robot.hear(
+    /게임준비 마피아( 하드코어)?/i,
+>>>>>>> feeb9e7af9dae7444891c351bdf39bb3b7a8a160
     function(res) {
-      res.send(res.match[0]+" "+res.match[1]);
+      level = robot.brain[""+res.envelope.user.id].goza;
+
+      //가입하지 않은 사용자가 시도한 경우
+      if(robot.brain[""+res.envelope.user.id] == null) {
+        res.send(imbue(stringTable.notRegisteredAccountError, 0));
+        return;
+      }
+
+      //이미 진행 중인 경우
+      if (stateMafia == true) {
+        res.send(imbue(stringTable.stringMafiaAlreadyPlaying, level));
+        return;
+      }
+
+      //모집 중 참여인 경우
+      if (stateReadyProcess == true) {
+        if (res.match[1] == " 하드코어") {
+          if (stateHardCore == false)
+            return;
+        } else if (stateHardCore == true) return;
+
+        if (isRegisteringDuplicated(res)) { //중복참여 배제
+          res.send(imbue(stringTable.stringMafiaRegistrationDuplicatedAttempt, level));
+          return;
+        }
+        mafiaRegister(res);
+        return;
+      };
+
+      //최초 모집 시전 하는 경우
+      stateReadyProcess = true;
+      if (res.match[1] == " 하드코어") stateHardCore = true;
+
+      mafiaPush(res);
+      if (stateHardCore == true) {
+        res.send(imbue(stringTable.stringMafiaPlayerRegistrationHardcore, level));
+      } else {
+        res.send(imbue(stringTable.stringMafiaPlayerRegistration, level));
+      }
+    }
+  );
+
+  robot.hear(
+    /게임시작 마피아/i,
+    function(res) {
+      level = robot.brain[""+res.envelope.user.id].goza;
+
+      //가입되지 않은 사용자
+      if (robot.brain[""+res.envelope.user.id] == null) {
+        res.send(imbue(stringTable.notRegisteredAccountError, 0));
+        return;
+      }
+
+      //게임준비중이 아님
+      if (stateMafia == true || stateReadyProcess == false) return;
+
+      //게임참가대상자가 아님
+      if (!isRegisteringDuplicated(res)) {
+        res.send(imbue(stringTable.stringMafiaUnauthorizedStartRequest, level));
+        return;
+      }
+
+      //공식적인 게임시작
+      stateMafia = true;
+      stateReadyProcess = false;
+
+      mafiaInitializeGame(res);
+    }
+  );
+
+  robot.hear(
+    /.*/,
+    function(res) { //마피아 게임 강제폭파 조건
+      
+    }
+  );
+
+  robot.hear(
+    /supervise( stateMafia[\+\-])?( stateHardCore[\+\-])?( stateReadyProcess[\+\-])?/,
+    function(res) {
+      var arg = res.match[0];
+      
+      if (arg.match(/stateMafia\+/)) {
+        stateMafia = true;
+        res.send("Set flag stateMafia : true");
+      } else if (arg.match(/stateMafia\-/)) {
+        stateMafia = false;
+        res.send("Set flag stateMafia : false");
+      }
+      
+      if (arg.match(/stateHardCore\+/)) {
+        stateHardCore = true;
+        res.send("Set flag stateHardCore : true");
+      } else if (arg.match(/stateHardCore\-/)) {
+        stateHardCore = false;
+        res.send("Set flag stateHardCore : false");
+      }
+
+      if (arg.match(/stateReadyProcess\+/)) {
+        stateReadyProcess = true;
+        res.send("Set flag stateReadyProcess : true");
+      } else if (arg.match(/stateReadyProcess\-/)) {
+        stateReadyProcess = false;
+        res.send("Set flag stateReadyProcess : false");
+      }
     }
   );
 
