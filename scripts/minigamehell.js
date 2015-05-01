@@ -156,39 +156,31 @@ module.exports = function(robot) {
   robot.hear(
     /supervise( stateMafia[\+\-])?( stateHardCore[\+\-])?( stateReadyProcess[\+\-])?/,
     function(res) {
-      var ok = false;
-
-      for (var arg in res.match) {
-        if (arg.match(/supervise/)) continue;
-        if (arg.match(/ stateMafia\+/)) {
-          stateMafia = true;
-          res.send("Set flag stateMafia : true");
-          ok = true;
-        } else if (arg.match(/ stateMafia\-/)) {
-          stateMafia = false;
-          res.send("Set flag stateMafia : false");
-          ok = true;
-        } else if (arg.match(/ stateHardCore\+/)) {
-          stateHardCore = true;
-          res.send("Set flag stateHardCore : true");
-          ok = true;
-        } else if (arg.match(/ stateHardCore\-/)) {
-          stateHardCore = false;
-          res.send("Set flag stateHardCore : false");
-          ok = true;
-        } else if (arg.match(/ stateReadyProcess\+/)) {
-          stateReadyProcess = true;
-          res.send("Set flag stateReadyProcess : true");
-          ok = true;
-        } else if (arg.match(/ stateReadyProcess\+/)) {
-          stateReadyProcess = false;
-          res.send("Set flag stateReadyProcess : false");
-          ok = true;
-        }
+      var arg = res.match[0];
+      
+      if (arg.match(/ stateMafia\+/)) {
+        stateMafia = true;
+        res.send("Set flag stateMafia : true");
+      } else if (arg.match(/ stateMafia\-/)) {
+        stateMafia = false;
+        res.send("Set flag stateMafia : false");
+      }
+      
+      if (arg.match(/ stateHardCore\+/)) {
+        stateHardCore = true;
+        res.send("Set flag stateHardCore : true");
+      } else if (arg.match(/ stateHardCore\-/)) {
+        stateHardCore = false;
+        res.send("Set flag stateHardCore : false");
       }
 
-      if (ok == false)
-          res.send("Syntax: supervise stateMafia[+-] stateHardCore[+-] stateReadyProcess[+-]");
+      if (arg.match(/ stateReadyProcess\+/)) {
+        stateReadyProcess = true;
+        res.send("Set flag stateReadyProcess : true");
+      } else if (arg.match(/ stateReadyProcess\+/)) {
+        stateReadyProcess = false;
+        res.send("Set flag stateReadyProcess : false");
+      }
     }
   );
 }
