@@ -32,6 +32,14 @@ stringTable.stringMafiaPlayerJoin = {};
 stringTable.stringMafiaPlayerJoin["_0"] = "가 마피아에 참여한다.";
 stringTable.stringMafiaPlayerJoin["_4"] = "님께서 마피아 게임에 참여하셨습니다.";
 
+stringTable.stringMafiaUnauthorizedStartRequest = {};
+stringTable.stringMafiaUnauthorizedStartRequest["_0"] = "하찮은 불가촉천민따위가 어딜 들이대??";
+stringTable.stringMafiaUnauthorizedStartRequest["_4"] = "게임에 참여하지 않는 사용자는 게임을 시작할 수 없습니다.";
+
+
+stringTable.generalGameStartIntroduction = "지금부터 마피아 게임이 시작됩니다!!!!";
+
+
 function imbue(someString, level) {
   while (level>=0) {
     if (someString["_"+level] != null)
@@ -63,7 +71,15 @@ function violationPenalty(user) {
 }
 
 function terminateMafia() {
+  stateMafia = false;
+  stateHardCore = false;
+  stateReadyProcess = false;
 
+  Players = [];
+}
+
+function mafiaInitializeGame(res) {
+  res.send(stringTable.generalGameStartIntroduction);
 }
 
 module.exports = function(robot) {
@@ -123,13 +139,13 @@ module.exports = function(robot) {
   robot.hear(
     /게임준비 마피아( 하드코어)?/i,
     function(res) {
+      level = robot.brain[""+res.envelope.user.id].goza;
+
       //가입하지 않은 사용자가 시도한 경우
       if(robot.brain[""+res.envelope.user.id] == null) {
         res.send(imbue(stringTable.notRegisteredAccountError, 0));
         return;
       }
-
-      level = robot.brain[""+res.envelope.user.id].goza;
 
       //이미 진행 중인 경우
       if (stateMafia == true) {
@@ -162,6 +178,41 @@ module.exports = function(robot) {
       } else {
         res.send(imbue(stringTable.stringMafiaPlayerRegistration, level));
       }
+    }
+  );
+
+  robot.hear(
+    /게임시작 마피아/i,
+    function(res) {
+      level = robot.brain[""+res.envelope.user.id].goza;
+
+      //가입되지 않은 사용자
+      if (robot.brain[""+res.envelope.user.id] == null) {
+        res.send(imbue(stringTable.notRegisteredAccountError, 0));
+        return;
+      }
+
+      //게임준비중이 아님
+      if (stateMafia == true || stateReadyProcess == false) return;
+
+      //게임참가대상자가 아님
+      if (!isRegisteringDuplicated(res)) {
+        res.send(imbue(stringTable.stringMafiaUnauthorizedStartRequest, level));
+        return;
+      }
+
+      //공식적인 게임시작
+      stateMafia = true;
+      stateReadyProcess = false;
+
+      mafiaInitializeGame(res);
+    }
+  );
+
+  robot.hear(
+    /.*/,
+    function(res) { //마피아 게임 강제폭파 조건
+      
     }
   );
 
