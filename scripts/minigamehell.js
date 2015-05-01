@@ -92,9 +92,11 @@ module.exports = function(robot) {
   robot.hear(
     /supervise( stateMafia[\+\-])?/i,
     function(res) {
-      if (res.match[1].match(/.*\+/)) {
+      var arg1 = res.match[1];
+      arg1 += "";
+      if (arg1.match(/.*\+/)) {
           res.send("matched stateMafia +");
-      } else if (res.match[1].match(/.*\-/)) {
+      } else if (arg1.match(/.*\-/)) {
           res.send("matched stateMafia -");
       }
     }
