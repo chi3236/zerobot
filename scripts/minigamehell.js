@@ -152,34 +152,34 @@ module.exports = function(robot) {
   robot.hear(
     /supervise( stateMafia[\+\-])?( stateHardCore[\+\-])?( stateReadyProcess[\+\-])?/,
     function(res) {
-      var arg1 = res.match[1];
-      var arg2 = res.match[2];
-      var arg3 = res.match[3];
-      arg1 += "";
-      arg2 += "";
-      arg3 += "";
+      var ok = false;
 
-      if (arg1.match(/.*\+/)) {
-        stateMafia = true;
-        res.send("Set flag stateMafia : true");
-      } else if (arg1.match(/.*\-/)) {
-        stateMafia = false;
-        res.send("Set flag stateMafia : false");
-      } else if (arg2.match(/.*\+/)) {
-        stateHardCore = true;
-        res.send("Set flag stateHardCore : true");
-      } else if (arg2.match(/.*\-/)) {
-        stateHardCore = false;
-        res.send("Set flag stateHardCore : false");
-      } else if (arg3.match(/.*\+/)) {
-        stateReadyProcess = true;
-        res.send("Set flag stateReadyProcess : true");
-      } else if (arg3.match(/.*\+/)) {
-        stateReadyProcess = false;
-        res.send("Set flag stateReadyProcess : false");
-      } else {
-        res.send("Syntax: supervise stateMafia[+-] stateHardCore[+-] stateReadyProcess[+-]");
+      for (var arg in res.match) {
+        if (arg.match(/supervise/)) continue;
+        if (arg.match(/ stateMafia\+/)) {
+          stateMafia = true;
+          res.send("Set flag stateMafia : true");
+        } else if (arg.match(/ stateMafia\-/)) {
+          stateMafia = false;
+          res.send("Set flag stateMafia : false");
+        } else if (arg.match(/ stateHardCore\+/)) {
+          stateHardCore = true;
+          res.send("Set flag stateHardCore : true");
+        } else if (arg.match(/ stateHardCore\-/)) {
+          stateHardCore = false;
+          res.send("Set flag stateHardCore : false");
+        } else if (arg.match(/ stateReadyProcess\+/)) {
+          stateReadyProcess = true;
+          res.send("Set flag stateReadyProcess : true");
+        } else if (arg.match(/ stateReadyProcess\+/)) {
+          stateReadyProcess = false;
+          res.send("Set flag stateReadyProcess : false");
+        }
+        ok = true;
       }
+
+      if (ok == false)
+          res.send("Syntax: supervise stateMafia[+-] stateHardCore[+-] stateReadyProcess[+-]");
     }
   );
 }
