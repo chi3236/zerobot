@@ -131,7 +131,7 @@ module.exports = function(robot) {
   );
 
   robot.hear(
-    /supervise( stateMafia[\+\-])?( stateHardCore[\+\-])?( stateReadyProcess[\+\-])?/i,
+    /supervise( stateMafia[\+\-])?( stateHardCore[\+\-])?( stateReadyProcess[\+\-])?/,
     function(res) {
       var arg1 = res.match[1];
       var arg2 = res.match[2];
