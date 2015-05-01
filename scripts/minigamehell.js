@@ -55,6 +55,10 @@ function mafiaRegister(res) {
   mafiaPush(res);
 }
 
+function isRegisteringDuplicated(res) {
+  return false;
+}
+
 module.exports = function(robot) {
 
   robot.hear(
@@ -132,7 +136,7 @@ module.exports = function(robot) {
             return;
         } else if (stateHardCore == true) return;
 
-        if (isRegisteringDuplicated) { //중복참여 배제
+        if (isRegisteringDuplicated(res)) { //중복참여 배제
           res.send(imbue(stringTable.stringMafiaRegistrationDuplicatedAttempt), level);
           return;
         }
