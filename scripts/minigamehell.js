@@ -67,7 +67,7 @@ module.exports = function(robot) {
       if(robot.brain[""+res.envelope.user.id] == null) 
       {
         res.send("안녕 "+res.envelope.user.name+". 지금부터 게임을 시작한다")
-        robot.brain[""+res.envelope.user.id] = {id:res.envelope.user.id, money:99999999, goza:1};
+        robot.brain[""+res.envelope.user.id] = {id:res.envelope.user.id, money:50, goza:1};
       }
       else
       {
@@ -95,9 +95,9 @@ module.exports = function(robot) {
     function(res){
       var upgrade_money = (100*(robot.brain[""+res.envelope.user.id].goza * robot.brain[""+res.envelope.user.id].goza)) - (50 * robot.brain[""+res.envelope.user.id].goza)
 
-      if(robot.brain[""+res.envelope.user.id].money > upgrade_money)
+      if(robot.brain[""+res.envelope.user.id].money >= upgrade_money)
       {
-        robot.brain[""+res.envelope.user.id].money = robot.brain[""+res.envelope.user.id].money - upgrade_money;
+        robot.brain[""+res.envelope.user.id].money -= upgrade_money;
 
         if(Math.random() <= Math.pow(0.9, robot.brain[""+res.envelope.user.id].goza-1)) {
           robot.brain[""+res.envelope.user.id].goza = robot.brain[""+res.envelope.user.id].goza + 1;
@@ -183,6 +183,50 @@ module.exports = function(robot) {
       }
     }
   );
+
+
+  robot.hear(
+    /게임시작( 구구단)?/i,
+      function(res)
+      {
+        if(robot.brain[""+res.envelope.user.id] == null) 
+        {
+          res.send("넌 가입을 하지 않았다.")
+        }
+        else{
+          robot.brain["gugu"] = {problem:0, answer:0};
+
+          var num1 = Math.floor(Math.random() *100);
+          var num2 = Math.floor(Math.random() *100);
+     
+          robot.brain["gugu"].answer = num1*num2;
+
+          res.send(num1 +" * "+num2+" = ? ");
+          robot.brain["gugu"].problem = 1
+        }
+      }
+  );
+  robot.hear(
+    /^[0-9]+$/i,
+    function(res)
+    {
+      if(robot.brain["gugu"].problem == 1)
+      {
+        var user_answer = res.match[0]-0;
+        if(user_answer == robot.brain["gugu"].answer)
+        {
+          robot.brain[""+res.envelope.user.id].money += 100;
+          res.send("정답"); 
+        }
+        else
+        {
+          robot.brain[""+res.envelope.user.id].money -= 50 ;
+          res.send("오답");
+        }
+        robot.brain["gugu"].problem = 0
+      }
+    }
+  );      
 }
   
 
