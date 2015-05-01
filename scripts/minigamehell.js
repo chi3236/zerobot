@@ -14,6 +14,9 @@ stringTable.stringEventScreen02 = {};
 stringTable.stringEventScreen02["_2"] = "Hello?";
 //above 3 strings are examples
 
+stringTable.notRegisteredAccountError = {};
+stringTable.notRegisteredAccountError["_0"] = "당신은 가입하지 않았습니다. 가입하려면 [회원가입]를 입력하십시오.";
+
 stringTable.stringMafiaAlreadyPlaying = {};
 stringTable.stringMafiaAlreadyPlaying["_0"] = "ㅡㅡ 기다려라 겜 아직 안끝났다...";
 stringTable.stringMafiaAlreadyPlaying["_4"] = "게임이 이미 진행중입니다. 진행중이 게임이 종료될 때까지 기다려 주세요.";
@@ -104,6 +107,11 @@ module.exports = function(robot) {
   robot.hear(
     /게임준비 마피아( 하드코어)?/i,
     function(res) {
+      if(robot.brain[""+res.envelope.user.id] == null) {
+        res.send(imbue(stringTable.notRegisteredAccountError, 0));
+        return;
+      }
+
       level = robot.brain[""+res.envelope.user.id].goza;
 
       //이미 진행 중인 경우
