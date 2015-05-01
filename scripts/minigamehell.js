@@ -104,6 +104,8 @@ module.exports = function(robot) {
   robot.hear(
     /게임준비 마피아( 하드코어)?/i,
     function(res) {
+      level = robot.brain[""+res.envelope.user.id].goza;
+
       //이미 진행 중인 경우
       if (stateMafia == true) {
         res.send(imbue(stringTable.stringMafiaAlreadyPlaying, level));
