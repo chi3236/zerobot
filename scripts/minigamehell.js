@@ -18,7 +18,7 @@ module.exports = function(robot){
   		res.send("넌 가입을 하지 않았다.")
   	}
   	else{
-  		res.send(res.envelope.user.name+"은 $"+robot.brain[""+res.envelope.user.id].money+" 만큼 돈이 있다")
+  		res.send(res.envelope.user.name+"은 $"+robot.brain[""+res.envelope.user.id].money+" 만큼 돈이 있고 신분은 "+robot.brain[""+res.envelope.user.id].goza+" 이다.")
     }
   });
 
@@ -29,6 +29,7 @@ module.exports = function(robot){
   			robot.brain[""+res.envelope.user.id].money = robot.brain[""+res.envelope.user.id].money - upgrade_money
 
   			if(Math.random() < Math.pow(0.9, robot.brain[""+res.envelope.user.id].goza-1)){
+  				robot.brain[""+res.envelope.user.id].goza = robot.brain[""+res.envelope.user.id].goza + 1;
   				res.send("신분상승 성공!");
   			}
   			else {
