@@ -144,7 +144,7 @@ module.exports = function(robot) {
         } else if (stateHardCore == true) return;
 
         if (isRegisteringDuplicated(res)) { //중복참여 배제
-          res.send(imbue(stringTable.stringMafiaRegistrationDuplicatedAttempt), level);
+          res.send(imbue(stringTable.stringMafiaRegistrationDuplicatedAttempt, level));
           return;
         }
         mafiaRegister(res);
