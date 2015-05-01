@@ -18,7 +18,10 @@ module.exports = function(robot){
   		res.send("넌 가입을 하지 않았다.")
   	}
   	else{
-  		res.send(res.envelope.user.name+"은 $"+robot.brain[""+res.envelope.user.id].money+" 만큼 돈이 있고 신분은 "+robot.brain[""+res.envelope.user.id].goza+" 단계이다.")
+  		var next_upgrade_money = (100*(robot.brain[""+res.envelope.user.id].goza * robot.brain[""+res.envelope.user.id].goza)) - (50 * robot.brain[""+res.envelope.user.id].goza)
+  		res.send(res.envelope.user.name+"은(는) $"+robot.brain[""+res.envelope.user.id].money+" 만큼 돈이 있고 신분은 "+robot.brain[""+res.envelope.user.id].goza+" 단계이다.");
+  		res.send("다음 강화하는데 드는 비용: $ "+next_upgrade_money);
+  		res.send("다음 강화 성공 확률: "+Math.pow(0.9, robot.brain[""+res.envelope.user.id].goza-1))
     }
   });
 
@@ -30,11 +33,11 @@ module.exports = function(robot){
 
   			if(Math.random() < Math.pow(0.9, robot.brain[""+res.envelope.user.id].goza-1)){
   				robot.brain[""+res.envelope.user.id].goza = robot.brain[""+res.envelope.user.id].goza + 1;
-  				res.send("신분상승 성공!");
+  				res.send(res.envelope.user.name+"신분상승 성공! "+robot.brain[""+res.envelope.user.id].goza+" 단계가 되었다");
   			}
   			else {
   				robot.brain[""+res.envelope.user.id].goza=1;
-  				res.send("신분상승 실패! 신분 초기화됨 병1신");
+  				res.send(res.envelope.user.name+"신분상승 실패! 신분 초기화됨 병1신");
   			}
   		}
   		else{
