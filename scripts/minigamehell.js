@@ -14,7 +14,12 @@ module.exports = function(robot){
   });
 
   robot.hear(/나의정보/i, function(res){
-  	res.send(res.envelope.user.name+"은 $"+robot.brain[""+res.envelope.user.id].money+" 만큼 돈이 있다")
+  	if(robot.brain[""+res.envelope.user.id] == null){
+  		res.send("넌 가입을 하지 않았다.")
+  	}
+  	else{
+  		res.send(res.envelope.user.name+"은 $"+robot.brain[""+res.envelope.user.id].money+" 만큼 돈이 있다")
+    }
   });
 }
   
