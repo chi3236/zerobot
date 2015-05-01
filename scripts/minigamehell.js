@@ -21,12 +21,16 @@ stringTable.stringMafiaAlreadyPlaying = {};
 stringTable.stringMafiaAlreadyPlaying["_0"] = "ㅡㅡ 기다려라 겜 아직 안끝났다...";
 stringTable.stringMafiaAlreadyPlaying["_4"] = "게임이 이미 진행중입니다. 진행중이 게임이 종료될 때까지 기다려 주세요.";
 
+stringTable.stringMafiaRegistrationDuplicatedAttempt = {};
+stringTable.stringMafiaRegistrationDuplicatedAttempt["_0"] = "아 좀 닥쳐라 ㅡㅡ";
+stringTable.stringMafiaRegistrationDuplicatedAttempt["_4"] = "중복된 요청입니다.";
+
 stringTable.stringMafiaPlayerRegistration = {};
 stringTable.stringMafiaPlayerRegistration["_0"] = "니가 뭔데 마피아를 시작하냐? 누가 [게임준비 마피아]를 입력하겠어?";
 stringTable.stringMafiaPlayerRegistration["_4"] = "마피아 게임을 준비합니다. 게임에 참여할 분들은 [게임준비 마피아]를 입력해 주세요.";
 
 stringTable.stringMafiaPlayerRegistrationHardcore = {};
-stringTable.stringMafiaPlayerRegistrationHardcore["_0"] = "씨1발 이샛기가 하드코어를 한답니다 ㅋㅋㅋㅋㅋㅋㅋ";
+stringTable.stringMafiaPlayerRegistrationHardcore["_0"] = "ㅁ친 이샛기가 하드코어를 한답니다 ㅋㅋㅋㅋㅋㅋㅋ";
 stringTable.stringMafiaPlayerRegistrationHardcore["_4"] = "마피아 게임(하드코어 모드)을 준비합니다. 게임에 참여할 분들은 [게임준비 마피아]를 입력해 주세요.";
 
 stringTable.stringMafiaPlayerJoin = {};
@@ -107,6 +111,7 @@ module.exports = function(robot) {
   robot.hear(
     /게임준비 마피아( 하드코어)?/i,
     function(res) {
+      //가입하지 않은 사용자가 시도한 경우
       if(robot.brain[""+res.envelope.user.id] == null) {
         res.send(imbue(stringTable.notRegisteredAccountError, 0));
         return;
@@ -127,6 +132,10 @@ module.exports = function(robot) {
             return;
         } else if (stateHardCore == true) return;
 
+        if (isRegisteringDuplicated) { //중복참여 배제
+          res.send(imbue(stringTable.stringMafiaRegistrationDuplicatedAttempt), level);
+          return;
+        }
         mafiaRegister(res);
         return;
       };
