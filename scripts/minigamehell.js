@@ -147,13 +147,8 @@ module.exports = function(robot) {
     }
   );
 
-<<<<<<< HEAD
   robot.respond(
-    /게임준비( 마피아)?/i,
-=======
-  robot.hear(
     /게임준비 마피아( 하드코어)?/i,
->>>>>>> feeb9e7af9dae7444891c351bdf39bb3b7a8a160
     function(res) {
       level = robot.brain[""+res.envelope.user.id].goza;
 
@@ -280,7 +275,7 @@ module.exports = function(robot) {
      
           robot.brain["gugu"].answer = num1*num2;
 
-          res.send(num1 +" * "+num2+" = ? ");
+          res.send(num1 +" X "+num2+" = ? ");
           robot.brain["gugu"].problem = 1
           }
         }
