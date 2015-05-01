@@ -22,7 +22,7 @@ module.exports = function(robot) {
   robot.brain["gugu"] = {problem:0, answer:0};
 
   robot.respond(
-    /help/i,
+    /도움/i,
       function(res){
         res.send("답을 제외한 명령어는 호출하면서 입력해야 합니다")
         res.send("회원가입: 게임을 시작");
