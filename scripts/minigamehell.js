@@ -21,7 +21,18 @@ module.exports = function(robot) {
   //above 3 strings are examples
   robot.brain["gugu"] = {problem:0, answer:0};
 
-  robot.hear(
+  robot.respond(
+    /help/i,
+      function(res){
+        res.send("답을 제외한 명령어는 호출하면서 입력해야 합니다")
+        res.send("회원가입: 게임을 시작");
+        res.send("나의정보: 나의 현재 상태 보기");
+        res.send("신분상승: 신분 상승에 도전한다");
+        res.send("구구단시작: 구구단 게임을 시작한다");  
+      }
+    )
+
+  robot.respond(
     /회원가입/i, 
     function(res){
       if(robot.brain[""+res.envelope.user.id] == null) 
@@ -36,7 +47,7 @@ module.exports = function(robot) {
     }
   );
 
-  robot.hear(
+  robot.respond(
     /나의정보/i, 
     function(res){
       if(robot.brain[""+res.envelope.user.id] == null) {
@@ -50,7 +61,7 @@ module.exports = function(robot) {
     }
   );
 
-  robot.hear(
+  robot.respond(
     /신분상승/i, 
     function(res){
       var upgrade_money = (100*(robot.brain[""+res.envelope.user.id].goza * robot.brain[""+res.envelope.user.id].goza)) - (50 * robot.brain[""+res.envelope.user.id].goza)
@@ -72,7 +83,7 @@ module.exports = function(robot) {
     }
   );
 
-  robot.hear(
+  robot.respond(
     /게임준비( 마피아)?/i,
     function(res) {
       res.send(res.match[0]+" "+res.match[1]);
@@ -80,8 +91,8 @@ module.exports = function(robot) {
   );
 
 
-  robot.hear(
-    /구구단시/i,
+  robot.respond(
+    /구구단시작/i,
       function(res)
       {
         if(robot.brain[""+res.envelope.user.id] == null) 
