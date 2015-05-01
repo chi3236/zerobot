@@ -177,7 +177,7 @@ module.exports = function(robot) {
       if (arg.match(/stateReadyProcess\+/)) {
         stateReadyProcess = true;
         res.send("Set flag stateReadyProcess : true");
-      } else if (arg.match(/stateReadyProcess\+/)) {
+      } else if (arg.match(/stateReadyProcess\-/)) {
         stateReadyProcess = false;
         res.send("Set flag stateReadyProcess : false");
       }
