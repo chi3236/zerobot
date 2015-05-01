@@ -8,6 +8,7 @@ function imbue(someString, level) {
 
     level--;
   }
+  return "UNDEFINED";
 }
 
 module.exports = function(robot) {
@@ -21,6 +22,9 @@ module.exports = function(robot) {
   stringTable.stringEventScreen02 = {};
   stringTable.stringEventScreen02["_2"] = "Hello?";
   //above 3 strings are examples
+
+  stringTable.stringMafiaAlreadyPlaying = {};
+  stringTable.stringMafiaAlreadyPlaying["_0"] = "test";
 
 
   robot.hear(
