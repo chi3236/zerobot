@@ -23,12 +23,12 @@ module.exports = function(robot){
   });
 
   robot.hear(/신분상승/i, function(res){
-  	var upgrade_money = (robot.brain[""+res.envelope.user.id].goza * robot.brain[""+res.envelope.user.id].goza) - (50 * robot.brain[""+res.envelope.user.id].goza)
+  	var upgrade_money = (100*(robot.brain[""+res.envelope.user.id].goza * robot.brain[""+res.envelope.user.id].goza)) - (50 * robot.brain[""+res.envelope.user.id].goza)
 
   		if(robot.brain[""+res.envelope.user.id].money > upgrade_money){
   			robot.brain[""+res.envelope.user.id].money = robot.brain[""+res.envelope.user.id].money - upgrade_money
 
-  			if(Math.random() < Math.pow(0.9, robot.brain[""+res.envelope.user.id].goza)-1){
+  			if(Math.random() < Math.pow(0.9, robot.brain[""+res.envelope.user.id].goza-1)){
   				res.send("신분상승 성공!");
   			}
   			else {
