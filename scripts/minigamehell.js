@@ -82,20 +82,25 @@ module.exports = function(robot) {
 
   robot.hear(
     /게임시작( 구구단)?/i,
-    function(res)
-    {
-      robot.brain["gugu"] = {problem:0, answer:0};
+      function(res)
+      {
+        if(robot.brain[""+res.envelope.user.id] == null) 
+        {
+          res.send("넌 가입을 하지 않았다.")
+        }
+        else{
+          robot.brain["gugu"] = {problem:0, answer:0};
 
-      var num1 = Math.floor(Math.random() *100);
-      var num2 = Math.floor(Math.random() *100);
+          var num1 = Math.floor(Math.random() *100);
+          var num2 = Math.floor(Math.random() *100);
      
-      robot.brain["gugu"].answer = num1*num2;
+          robot.brain["gugu"].answer = num1*num2;
 
-      res.send(num1 +" * "+num2+" = ? ");
-      robot.brain["gugu"].problem = 1
-    }
+          res.send(num1 +" * "+num2+" = ? ");
+          robot.brain["gugu"].problem = 1
+        }
+      }
   );
-
   robot.hear(
     /^[0-9]+$/i,
     function(res)
