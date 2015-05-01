@@ -163,23 +163,28 @@ module.exports = function(robot) {
         if (arg.match(/ stateMafia\+/)) {
           stateMafia = true;
           res.send("Set flag stateMafia : true");
+          ok = true;
         } else if (arg.match(/ stateMafia\-/)) {
           stateMafia = false;
           res.send("Set flag stateMafia : false");
+          ok = true;
         } else if (arg.match(/ stateHardCore\+/)) {
           stateHardCore = true;
           res.send("Set flag stateHardCore : true");
+          ok = true;
         } else if (arg.match(/ stateHardCore\-/)) {
           stateHardCore = false;
           res.send("Set flag stateHardCore : false");
+          ok = true;
         } else if (arg.match(/ stateReadyProcess\+/)) {
           stateReadyProcess = true;
           res.send("Set flag stateReadyProcess : true");
+          ok = true;
         } else if (arg.match(/ stateReadyProcess\+/)) {
           stateReadyProcess = false;
           res.send("Set flag stateReadyProcess : false");
+          ok = true;
         }
-        ok = true;
       }
 
       if (ok == false)
