@@ -19,7 +19,7 @@ module.exports = function(robot) {
   stringTable.stringEventScreen02 = {};
   stringTable.stringEventScreen02["_2"] = "Hello?";
   //above 3 strings are examples
-
+  robot.brain["gugu"] = {problem:0, answer:0};
 
   robot.hear(
     /회원가입/i, 
@@ -81,7 +81,7 @@ module.exports = function(robot) {
 
 
   robot.hear(
-    /게임시작( 구구단)?/i,
+    /구구단시작/i,
       function(res)
       {
         if(robot.brain[""+res.envelope.user.id] == null) 
@@ -89,8 +89,8 @@ module.exports = function(robot) {
           res.send("넌 가입을 하지 않았다.")
         }
         else{
-          robot.brain["gugu"] = {problem:0, answer:0};
-
+          if(robot.brain["gugu"].problem == 0)
+          {
           var num1 = Math.floor(Math.random() *100);
           var num2 = Math.floor(Math.random() *100);
      
@@ -98,6 +98,7 @@ module.exports = function(robot) {
 
           res.send(num1 +" * "+num2+" = ? ");
           robot.brain["gugu"].problem = 1
+          }
         }
       }
   );
@@ -111,12 +112,16 @@ module.exports = function(robot) {
         if(user_answer == robot.brain["gugu"].answer)
         {
           robot.brain[""+res.envelope.user.id].money += 100;
-          res.send("정답"); 
+          if(robot.brain[""+res.envelope.user.id] != null){
+            res.send(robot.brain[""+res.envelope.user.id].name+" 정답"); 
+          }
         }
         else
         {
           robot.brain[""+res.envelope.user.id].money -= 50 ;
-          res.send("오답");
+          if(robot.brain[""+res.envelope.user.id] != null){
+            res.send(robot.brain[""+res.envelope.user.id].name+" 오답");
+          }
         }
         robot.brain["gugu"].problem = 0
       }
