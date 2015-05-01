@@ -18,7 +18,7 @@ module.exports = function(robot){
   		res.send("넌 가입을 하지 않았다.")
   	}
   	else{
-  		res.send(res.envelope.user.name+"은 $"+robot.brain[""+res.envelope.user.id].money+" 만큼 돈이 있고 신분은 "+robot.brain[""+res.envelope.user.id].goza+" 이다.")
+  		res.send(res.envelope.user.name+"은 $"+robot.brain[""+res.envelope.user.id].money+" 만큼 돈이 있고 신분은 "+robot.brain[""+res.envelope.user.id].goza+" 단계이다.")
     }
   });
 
