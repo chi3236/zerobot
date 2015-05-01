@@ -5,7 +5,7 @@ var stateMafia = false;
 var stateHardCore = false;
 var stateReadyProcess = false;
 
-var Players = array({});
+var Players = Array({});
 
 var stringTable = {};
 
