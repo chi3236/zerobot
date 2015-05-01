@@ -11,6 +11,8 @@ function imbue(someString, level) {
 }
 
 module.exports = function(robot) {
+  var stateMafia = false;
+
   var stringTable = {};
   stringTable.stringEventScreen01 = {};
   stringTable.stringEventScreen01["_3"] = "This is a string for above 3 level";
@@ -73,9 +75,24 @@ module.exports = function(robot) {
   );
 
   robot.hear(
-    /게임준비( 마피아)?/i,
+    /게임준비 마피아( 하드코어)?/i,
     function(res) {
-      res.send(res.match[0]+" "+res.match[1]);
+      if (stateMafia == true) {
+        res.send(imbue(stringTable.stringMafiaAlreadyPlaying, level));
+        return;
+      }
+
+    }
+  );
+
+  robot.hear(
+    /supervise( stateMafia[\+\-])?/i,
+    function(res) {
+      if (res.match[1].match(/.*\+/)) {
+          res.send("matched stateMafia +");
+      } else if (res.match[1].match(/.*\-/)) {
+          res.send("matched stateMafia -");
+      }
     }
   );
 }
