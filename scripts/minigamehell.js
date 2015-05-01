@@ -5,14 +5,9 @@ var stateMafia = false;
 var stateHardCore = false;
 var stateReadyProcess = false;
 
-var stringTable = {};
-stringTable.stringEventScreen01 = {};
-stringTable.stringEventScreen01["_3"] = "This is a string for above 3 level";
-stringTable.stringEventScreen01["_7"] = "This is a string for above 7 level";
+var Players = array();
 
-stringTable.stringEventScreen02 = {};
-stringTable.stringEventScreen02["_2"] = "Hello?";
-//above 3 strings are examples
+var stringTable = {};
 
 stringTable.notRegisteredAccountError = {};
 stringTable.notRegisteredAccountError["_0"] = "당신은 가입하지 않았습니다. 가입하려면 [회원가입]를 입력하십시오.";
@@ -34,8 +29,8 @@ stringTable.stringMafiaPlayerRegistrationHardcore["_0"] = "ㅁ친 이샛기가 �
 stringTable.stringMafiaPlayerRegistrationHardcore["_4"] = "마피아 게임(하드코어 모드)을 준비합니다. 게임에 참여할 분들은 [게임준비 마피아]를 입력해 주세요.";
 
 stringTable.stringMafiaPlayerJoin = {};
-stringTable.stringMafiaPlayerJoin["_0"] = "";
-stringTable.stringMafiaPlayerJoin["_4"] = "";
+stringTable.stringMafiaPlayerJoin["_0"] = "가 마피아에 참여한다.";
+stringTable.stringMafiaPlayerJoin["_4"] = "님께서 마피아 게임에 참여하셨습니다.";
 
 function imbue(someString, level) {
   while (level>=0) {
@@ -48,15 +43,27 @@ function imbue(someString, level) {
 }
 
 function mafiaPush(res) {
-  return;
+  Players.push(res.envelope.user);
 }
 
 function mafiaRegister(res) {
   mafiaPush(res);
+  res.send(res.envelope.user.name+imbue(stringTable.stringMafiaPlayerJoin, level));
 }
 
 function isRegisteringDuplicated(res) {
+  for (var each in Players) {
+    if (each.id == res.envelope.user.id) return true;
+  }
   return false;
+}
+
+function violationPenalty(user) {
+
+}
+
+function terminateMafia() {
+  
 }
 
 module.exports = function(robot) {
@@ -149,7 +156,11 @@ module.exports = function(robot) {
       if (res.match[1] == " 하드코어") stateHardCore = true;
 
       mafiaPush(res);
-      res.send(imbue(stringTable.stringMafiaPlayerRegistration, level));
+      if (stateHardCore == true) {
+        res.send(imbue(stringTable.stringMafiaPlayerRegistrationHardcore, level));
+      } else {
+        res.send(imbue(stringTable.stringMafiaPlayerRegistration, level));
+      }
     }
   );
 
